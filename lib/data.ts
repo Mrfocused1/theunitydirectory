@@ -10,6 +10,37 @@ export const COUNTRIES: Record<
   india:    { name: "India",    flag: "🇮🇳", color: "#ff671f", cuisine: "Indian" },
 };
 
+// Unity Cup 2026 is held at The Valley, home of Charlton Athletic FC.
+export const STADIUM = {
+  name: "The Valley",
+  subtitle: "Charlton Athletic FC",
+  address: "Floyd Rd, Charlton, London SE7 8BL",
+  lat: 51.4865,
+  lng: 0.0364,
+};
+
+export type LatLng = { lat: number; lng: number };
+
+// Haversine — distance between two lat/lng points in km.
+export function distanceKm(a: LatLng, b: LatLng): number {
+  const R = 6371;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+export function formatDistance(km: number): string {
+  if (km < 1) return `${Math.round(km * 1000)} m`;
+  if (km < 10) return `${km.toFixed(1)} km`;
+  return `${Math.round(km)} km`;
+}
+
 export type Listing = {
   id: string;
   name: string;
@@ -40,10 +71,172 @@ export type EventItem = {
   summary: string;
 };
 
-// Real London-based venues across the four cuisines. Coordinates are approximate
-// from the listed postcode; verify and refine when wiring up real data.
+// Real London-based venues across the four cuisines. Listings near The Valley
+// (Charlton / Woolwich / Greenwich / Lewisham / Blackheath) are concentrated
+// first so the "near stadium" view has plenty to show.
 export const LISTINGS: Listing[] = [
-  // ===== Nigeria / West African =====
+  // ===== Near The Valley · Charlton / Woolwich =====
+  {
+    id: "j-rifas",
+    name: "Rifa's Caribbean Cuisine",
+    country: "jamaica",
+    type: "restaurant",
+    area: "Charlton",
+    address: "Flat 5, Gooding House, Valley Grove, Charlton, London SE7 8AT",
+    lat: 51.4860, lng: 0.0370,
+    summary: "Caribbean kitchen a few minutes from The Valley — jerk, curry goat and patties.",
+    tags: ["jerk", "curry goat", "near stadium"],
+    priceRange: "£",
+    featured: true,
+  },
+  {
+    id: "i-new-viceroy",
+    name: "New Viceroy",
+    country: "india",
+    type: "restaurant",
+    area: "Charlton Village",
+    address: "10 The Village, Charlton, London SE7 8UD",
+    lat: 51.4854, lng: 0.0339,
+    summary: "Charlton Village Indian dining room — curry-house classics and a long tandoori list.",
+    tags: ["curry house", "tandoori", "near stadium"],
+    priceRange: "££",
+    featured: true,
+  },
+  {
+    id: "i-kesar",
+    name: "Kesar Punjabi Restaurant",
+    country: "india",
+    type: "restaurant",
+    area: "Greenwich Peninsula",
+    address: "192 Woolwich Rd, London SE7 7RA",
+    lat: 51.4889, lng: 0.0234,
+    summary: "Punjabi cooking on Woolwich Road, ten minutes' walk from the stadium.",
+    tags: ["punjabi", "tandoori"],
+    priceRange: "££",
+  },
+  {
+    id: "j-real-deal",
+    name: "The Real Deal Authentic Jamaican",
+    country: "jamaica",
+    type: "restaurant",
+    area: "Woolwich",
+    address: "17 Plumstead Rd, Woolwich, London SE18 7BZ",
+    lat: 51.4902, lng: 0.0735,
+    summary: "Woolwich Jamaican kitchen with delivery across the SE7, SE18 and SE28 postcodes.",
+    tags: ["jerk", "takeaway", "delivery"],
+    priceRange: "£",
+  },
+  {
+    id: "j-chefs-house",
+    name: "Chef's House",
+    country: "jamaica",
+    type: "restaurant",
+    area: "Plumstead",
+    address: "128 Plumstead Common Rd, Woolwich, London SE18 2UL",
+    lat: 51.4815, lng: 0.0855,
+    summary: "Neighbourhood Caribbean dining room on Plumstead Common.",
+    tags: ["caribbean", "family-friendly"],
+    priceRange: "££",
+  },
+  {
+    id: "j-sunjam",
+    name: "Sunjam Caribbean",
+    country: "jamaica",
+    type: "cafe",
+    area: "Woolwich",
+    address: "13A Spray St, Woolwich, London SE18 6AP",
+    lat: 51.4905, lng: 0.0680,
+    summary: "Quick Caribbean takeaway off Powis Street.",
+    tags: ["takeaway", "lunch"],
+    priceRange: "£",
+  },
+  {
+    id: "n-tasty-woolwich",
+    name: "Tasty Woolwich",
+    country: "nigeria",
+    type: "restaurant",
+    area: "Woolwich",
+    address: "16 Plumstead Rd, Woolwich, London SE18 7BZ",
+    lat: 51.4901, lng: 0.0732,
+    summary: "Plumstead Road West African kitchen with jollof, egusi and pepper soup.",
+    tags: ["jollof", "egusi"],
+    priceRange: "£",
+    featured: true,
+  },
+  {
+    id: "n-marys-takeaway",
+    name: "Mary's Takeaway",
+    country: "nigeria",
+    type: "cafe",
+    area: "Woolwich",
+    address: "Unit 12, 125 Powis St, London SE18 6LQ",
+    lat: 51.4906, lng: 0.0665,
+    summary: "West African takeaway counter on Powis Street, popular for matchday lunches.",
+    tags: ["takeaway", "matchday"],
+    priceRange: "£",
+  },
+  {
+    id: "n-ammas-fare",
+    name: "Ammas Fare",
+    country: "nigeria",
+    type: "restaurant",
+    area: "Woolwich",
+    address: "179 Powis St, Woolwich, London SE18 6JL",
+    lat: 51.4908, lng: 0.0664,
+    summary: "Sit-down West African restaurant on the main Powis Street drag.",
+    tags: ["sit-down", "west african"],
+    priceRange: "££",
+  },
+  {
+    id: "n-favourite-african",
+    name: "Favourite African Restaurant",
+    country: "nigeria",
+    type: "restaurant",
+    area: "Plumstead",
+    address: "233 Plumstead High St, London SE18 1HF",
+    lat: 51.4877, lng: 0.0860,
+    summary: "Plumstead High Street West African spot with a hearty buffet-style menu.",
+    tags: ["buffet", "west african"],
+    priceRange: "£",
+  },
+  {
+    id: "i-jatt-juliet",
+    name: "Jatt & Juliet",
+    country: "india",
+    type: "bar",
+    area: "Greenwich",
+    address: "42 Woolwich Rd, London SE10 0JU",
+    lat: 51.4889, lng: 0.0070,
+    summary: "Modern Indian restaurant and bar between Greenwich and Charlton.",
+    tags: ["modern indian", "cocktails"],
+    priceRange: "££",
+  },
+  {
+    id: "i-mountain-view",
+    name: "Mountain View",
+    country: "india",
+    type: "restaurant",
+    area: "Greenwich",
+    address: "160 Trafalgar Rd, Greenwich, London SE10 9TZ",
+    lat: 51.4825, lng: 0.0070,
+    summary: "Greenwich Indian and Nepalese dining room near the Maritime Museum.",
+    tags: ["indian", "nepalese"],
+    priceRange: "££",
+  },
+  {
+    id: "i-coriander",
+    name: "The Coriander",
+    country: "india",
+    type: "restaurant",
+    area: "Blackheath",
+    address: "1-3 Station Crescent, London SE3 7EQ",
+    lat: 51.4690, lng: 0.0140,
+    summary: "Blackheath Indian local serving traditional and contemporary plates.",
+    tags: ["curry house"],
+    priceRange: "££",
+  },
+
+  // ===== Central & wider London =====
   {
     id: "n-ikoyi",
     name: "Ikoyi",
@@ -82,7 +275,6 @@ export const LISTINGS: Listing[] = [
     summary: "Crispy akara fritters with rotating fillings, anchored by an open kitchen in Borough Yards.",
     tags: ["fritters", "open kitchen", "lunch"],
     priceRange: "££",
-    featured: true,
     url: "https://www.akaralondon.co.uk/",
   },
   {
@@ -109,7 +301,6 @@ export const LISTINGS: Listing[] = [
     summary: "Long-running London Nigerian chain serving jollof, egusi, suya and grilled fish into the night.",
     tags: ["jollof", "suya", "late night"],
     priceRange: "££",
-    featured: true,
     url: "https://www.805restaurants.com/",
   },
   {
@@ -125,18 +316,6 @@ export const LISTINGS: Listing[] = [
     priceRange: "££",
   },
   {
-    id: "n-demis",
-    name: "Demi's Nigerian Restaurant & Bar",
-    country: "nigeria",
-    type: "restaurant",
-    area: "Maida Hill",
-    address: "339 Harrow Rd, London W9 3RB",
-    lat: 51.5247, lng: -0.1934,
-    summary: "Neighbourhood spot for pounded yam, pepper soup and weekend afrobeats.",
-    tags: ["pepper soup", "afrobeats"],
-    priceRange: "££",
-  },
-  {
     id: "n-tatale",
     name: "Tatale",
     country: "nigeria",
@@ -149,8 +328,6 @@ export const LISTINGS: Listing[] = [
     priceRange: "£££",
     url: "https://www.tatale.co.uk/",
   },
-
-  // ===== Jamaica / Caribbean =====
   {
     id: "j-ma-petite",
     name: "Ma Petite Jamaica",
@@ -162,7 +339,6 @@ export const LISTINGS: Listing[] = [
     summary: "Camden Caribbean diner with curry goat, jerk chicken and patties, open since the 1980s.",
     tags: ["jerk", "curry goat", "diner"],
     priceRange: "££",
-    featured: true,
     url: "https://www.mapetitejamaica.com/",
   },
   {
@@ -189,7 +365,6 @@ export const LISTINGS: Listing[] = [
     summary: "Brixton Hill stalwart for jerk, ackee and saltfish, and a long Caribbean cocktail list.",
     tags: ["jerk", "ackee", "cocktails"],
     priceRange: "££",
-    featured: true,
     url: "https://negrilonline.co.uk/",
   },
   {
@@ -228,9 +403,6 @@ export const LISTINGS: Listing[] = [
     tags: ["seasonal", "modern caribbean"],
     priceRange: "££",
   },
-
-  // ===== Zimbabwe (dedicated Zim venues are rare in the UK; these include
-  // pan-African and supper-club options that regularly feature Zim cooking) =====
   {
     id: "z-inairobi",
     name: "iNairobi",
@@ -258,8 +430,6 @@ export const LISTINGS: Listing[] = [
     priceRange: "£££",
     url: "https://cookingwithcaz.com/",
   },
-
-  // ===== India =====
   {
     id: "i-saravanaa-wembley",
     name: "Saravanaa Bhavan · Wembley",
@@ -271,7 +441,6 @@ export const LISTINGS: Listing[] = [
     summary: "Global vegetarian South Indian chain with dosa, idli and full thalis.",
     tags: ["south indian", "vegetarian", "dosa"],
     priceRange: "£",
-    featured: true,
     url: "https://www.saravanabhavan.com/",
   },
   {
@@ -284,18 +453,6 @@ export const LISTINGS: Listing[] = [
     lat: 51.5547, lng: -0.3050,
     summary: "Long-running Gujarati vegetarian canteen on Ealing Road with chaats, dosas and Indo-Chinese.",
     tags: ["gujarati", "vegetarian", "chaat"],
-    priceRange: "£",
-  },
-  {
-    id: "i-chandni-chowk",
-    name: "Chandni Chowk",
-    country: "india",
-    type: "restaurant",
-    area: "Southall",
-    address: "106 The Broadway, Southall UB1 1QF",
-    lat: 51.5057, lng: -0.3776,
-    summary: "Sweets, snacks and a sit-down menu on Southall's main road.",
-    tags: ["sweets", "punjabi", "snacks"],
     priceRange: "£",
   },
   {
@@ -312,18 +469,6 @@ export const LISTINGS: Listing[] = [
     url: "https://www.brilliantrestaurant.com/",
   },
   {
-    id: "i-ritas",
-    name: "Rita's Chilli Chaat Corner",
-    country: "india",
-    type: "cafe",
-    area: "Southall",
-    address: "118 The Broadway, Southall UB1 1QF",
-    lat: 51.5060, lng: -0.3780,
-    summary: "Tiny chaat counter on The Broadway pulling crowds for pani puri and tikki.",
-    tags: ["chaat", "street food", "vegetarian"],
-    priceRange: "£",
-  },
-  {
     id: "i-dosa-n-chutney",
     name: "Dosa n Chutney",
     country: "india",
@@ -334,7 +479,6 @@ export const LISTINGS: Listing[] = [
     summary: "Tooting specialist in South Indian dosas and idli sambar from morning to night.",
     tags: ["south indian", "dosa", "vegetarian"],
     priceRange: "£",
-    featured: true,
   },
   {
     id: "i-jaffna-house",
@@ -348,18 +492,6 @@ export const LISTINGS: Listing[] = [
     tags: ["sri lankan", "south indian", "hoppers"],
     priceRange: "£",
   },
-  {
-    id: "i-radha-krishna",
-    name: "Radha Krishna Bhavan",
-    country: "india",
-    type: "restaurant",
-    area: "Tooting",
-    address: "86 Tooting High St, London SW17 0RN",
-    lat: 51.4279, lng: -0.1681,
-    summary: "Keralan South Indian menu with uttapam, dosa and seafood specials.",
-    tags: ["keralan", "south indian", "seafood"],
-    priceRange: "£",
-  },
 ];
 
 export const EVENTS: EventItem[] = [
@@ -370,10 +502,10 @@ export const EVENTS: EventItem[] = [
     type: "watch-party",
     date: "Tuesday 26 May 2026",
     time: "7:00 pm",
-    venue: "Eko Wine Bar & Restaurant",
-    area: "Homerton",
-    lat: 51.5510, lng: -0.0440,
-    summary: "Big screens and a Naija menu for the opening semi-final. Doors at 6:30, kick-off 7:30.",
+    venue: "Tasty Woolwich, Plumstead Road",
+    area: "Woolwich",
+    lat: 51.4901, lng: 0.0732,
+    summary: "Big screens five minutes from the ground. Doors at 6:30, kick-off 7:30.",
   },
   {
     id: "e-semi-2-watch",
@@ -382,10 +514,34 @@ export const EVENTS: EventItem[] = [
     type: "watch-party",
     date: "Wednesday 27 May 2026",
     time: "7:00 pm",
-    venue: "Dosa n Chutney, Tooting",
-    area: "Tooting",
-    lat: 51.4276, lng: -0.1681,
-    summary: "Crossover menu of South Indian snacks and Jamaican patties on the night.",
+    venue: "Jatt & Juliet, Greenwich",
+    area: "Greenwich",
+    lat: 51.4889, lng: 0.0070,
+    summary: "Crossover menu of Indian small plates and Caribbean patties for the second semi.",
+  },
+  {
+    id: "e-pre-stadium",
+    title: "Pre-Stadium Suya Pop-Up",
+    country: "nigeria",
+    type: "pop-up",
+    date: "Tuesday 26 May 2026",
+    time: "5:30 pm",
+    venue: "Charlton Park gates",
+    area: "Charlton",
+    lat: 51.4870, lng: 0.0410,
+    summary: "Smoke-grilled suya skewers on the walk from Charlton station to The Valley.",
+  },
+  {
+    id: "e-zim-supper",
+    title: "Warriors Send-Off Supper",
+    country: "zimbabwe",
+    type: "pop-up",
+    date: "Sunday 24 May 2026",
+    time: "1:00 pm",
+    venue: "Cooking With Caz (venue TBC)",
+    area: "Central London",
+    lat: 51.5074, lng: -0.1278,
+    summary: "Pop-up Zim supper club to send off the Warriors. Ticketed; sign up via the enquiry form.",
   },
   {
     id: "e-naija-meetup",
@@ -412,27 +568,15 @@ export const EVENTS: EventItem[] = [
     summary: "Sound-system set with three selectors. Jerk grill running through the night.",
   },
   {
-    id: "e-zim-supper",
-    title: "Warriors Send-Off Supper",
-    country: "zimbabwe",
-    type: "pop-up",
-    date: "Sunday 24 May 2026",
-    time: "1:00 pm",
-    venue: "Cooking With Caz (venue TBC)",
-    area: "Central London",
-    lat: 51.5074, lng: -0.1278,
-    summary: "Pop-up Zim supper club to send off the Warriors. Ticketed; sign up via the enquiry form.",
-  },
-  {
     id: "e-5aside",
     title: "Diaspora 5-a-side Tournament",
     country: "all",
     type: "tournament",
     date: "Sunday 24 May 2026",
     time: "10:00 am",
-    venue: "PowerLeague Shoreditch",
-    area: "Shoreditch",
-    lat: 51.5240, lng: -0.0780,
+    venue: "PowerLeague Charlton",
+    area: "Charlton",
+    lat: 51.4910, lng: 0.0290,
     summary: "Sixteen teams, four nations, one bracket. Sign up via the enquiry form.",
   },
   {
@@ -442,10 +586,10 @@ export const EVENTS: EventItem[] = [
     type: "watch-party",
     date: "Saturday 30 May 2026",
     time: "12:00 pm",
-    venue: "Ma Petite Jamaica, Camden",
-    area: "Camden",
-    lat: 51.5394, lng: -0.1432,
-    summary: "Two games on the big screen. Brunch menu from noon, third-place kick-off at 2:30.",
+    venue: "Rifa's Caribbean, Charlton",
+    area: "Charlton",
+    lat: 51.4860, lng: 0.0370,
+    summary: "Two games on the big screen, two minutes from the ground. Brunch from noon.",
   },
 ];
 

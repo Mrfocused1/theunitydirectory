@@ -28,6 +28,7 @@ export default function MapClient(props: {
   listings: Listing[];
   events: EventItem[];
   height?: number | string;
+  focusStadium?: boolean;
 }) {
   return <Map {...props} />;
 }
