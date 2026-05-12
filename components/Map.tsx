@@ -5,9 +5,11 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { COUNTRIES, STADIUM, type Country, type Listing, type EventItem } from "@/lib/data";
 
-type MapPoint =
-  | ({ kind: "listing" } & Listing)
-  | ({ kind: "event" } & EventItem);
+export type MapSelection =
+  | { kind: "listing"; data: Listing }
+  | { kind: "event"; data: EventItem }
+  | { kind: "stadium" }
+  | null;
 
 function FitBounds({
   points,
@@ -53,15 +55,17 @@ export default function Map({
   events,
   height = 480,
   focusStadium = false,
+  onSelect,
 }: {
   listings: Listing[];
   events: EventItem[];
   height?: number | string;
   focusStadium?: boolean;
+  onSelect?: (sel: MapSelection) => void;
 }) {
-  const points: MapPoint[] = [
-    ...listings.map((l) => ({ kind: "listing" as const, ...l })),
-    ...events.map((e) => ({ kind: "event" as const, ...e })),
+  const allPoints = [
+    ...listings.map((p) => ({ lat: p.lat, lng: p.lng })),
+    ...events.map((p) => ({ lat: p.lat, lng: p.lng })),
   ];
 
   return (
@@ -76,53 +80,47 @@ export default function Map({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-        <FitBounds points={points} focusStadium={focusStadium} />
+        <FitBounds points={allPoints} focusStadium={focusStadium} />
 
         {/* Stadium marker */}
-        <Marker position={[STADIUM.lat, STADIUM.lng]} icon={stadiumIcon} zIndexOffset={1000}>
+        <Marker
+          position={[STADIUM.lat, STADIUM.lng]}
+          icon={stadiumIcon}
+          zIndexOffset={1000}
+          eventHandlers={{ click: () => onSelect?.({ kind: "stadium" }) }}
+        >
           <Tooltip permanent direction="top" offset={[0, -22]} className="tud-stadium-tooltip">
             {STADIUM.name}
           </Tooltip>
-          <Popup>
-            <div style={{ fontFamily: "DM Sans, Arial, sans-serif", color: "#0c1a12", minWidth: 200 }}>
-              <div style={{ fontFamily: "Stack Sans, Arial, sans-serif", fontWeight: 700, fontSize: 16, marginBottom: 4 }}>
-                {STADIUM.name}
-              </div>
-              <div style={{ fontSize: 12, opacity: 0.8, marginBottom: 6 }}>{STADIUM.subtitle}</div>
-              <div style={{ fontSize: 13 }}>{STADIUM.address}</div>
-            </div>
-          </Popup>
         </Marker>
 
-        {points.map((p) => {
-          const country = p.kind === "listing" ? p.country : p.country === "all" ? null : (p.country as Country);
-          const color = country ? COUNTRIES[country].color : "#fcf1da";
-          const radius = p.kind === "event" ? 11 : 9;
+        {listings.map((p) => {
+          const color = COUNTRIES[p.country].color;
           return (
             <CircleMarker
-              key={`${p.kind}-${p.id}`}
+              key={`l-${p.id}`}
               center={[p.lat, p.lng]}
-              radius={radius}
-              pathOptions={{
-                color: "#0c1a12",
-                weight: 2,
-                fillColor: color,
-                fillOpacity: p.kind === "event" ? 0.95 : 0.85,
-              }}
+              radius={9}
+              pathOptions={{ color: "#0c1a12", weight: 2, fillColor: color, fillOpacity: 0.85 }}
+              eventHandlers={{ click: () => onSelect?.({ kind: "listing", data: p }) }}
             >
-              <Popup>
-                <div style={{ fontFamily: "DM Sans, Arial, sans-serif", color: "#0c1a12", minWidth: 200 }}>
-                  <div style={{ fontFamily: "Stack Sans, Arial, sans-serif", fontWeight: 700, fontSize: 16, marginBottom: 4 }}>
-                    {p.kind === "listing" ? p.name : p.title}
-                  </div>
-                  <div style={{ fontSize: 12, opacity: 0.8, marginBottom: 6 }}>
-                    {p.kind === "listing"
-                      ? `${COUNTRIES[p.country].flag} ${COUNTRIES[p.country].cuisine} · ${p.type} · ${p.area}`
-                      : `${country ? COUNTRIES[country].flag : "🏆"} ${p.type} · ${p.date} · ${p.time}`}
-                  </div>
-                  <div style={{ fontSize: 13 }}>{p.summary}</div>
-                </div>
-              </Popup>
+              <Tooltip>{p.name}</Tooltip>
+            </CircleMarker>
+          );
+        })}
+
+        {events.map((p) => {
+          const country = p.country === "all" ? null : (p.country as Country);
+          const color = country ? COUNTRIES[country].color : "#fcf1da";
+          return (
+            <CircleMarker
+              key={`e-${p.id}`}
+              center={[p.lat, p.lng]}
+              radius={11}
+              pathOptions={{ color: "#0c1a12", weight: 2, fillColor: color, fillOpacity: 0.95 }}
+              eventHandlers={{ click: () => onSelect?.({ kind: "event", data: p }) }}
+            >
+              <Tooltip>{p.title}</Tooltip>
             </CircleMarker>
           );
         })}
@@ -135,6 +133,7 @@ export default function Map({
           background: #ffb81c;
           box-shadow: 0 0 0 4px rgba(255, 184, 28, 0.25), 0 6px 18px rgba(0,0,0,0.5);
           display: flex; align-items: center; justify-content: center;
+          cursor: pointer;
         }
         .tud-stadium-tooltip {
           background: #ffb81c !important;
@@ -148,7 +147,21 @@ export default function Map({
           box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
         }
         .tud-stadium-tooltip::before { border-top-color: #ffb81c !important; }
+        .leaflet-tooltip {
+          background: #0c1a12 !important;
+          color: #fcf1da !important;
+          border: 1px solid rgba(252,241,218,0.25) !important;
+          font-family: Stack Sans, Arial, sans-serif !important;
+          font-weight: 500 !important;
+          font-size: 12px !important;
+          padding: 4px 8px !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+        }
+        .leaflet-tooltip-top:before { border-top-color: #0c1a12 !important; }
       `}</style>
     </div>
   );
 }
+
+// Re-export Popup so it doesn't get tree-shaken from leaflet — used elsewhere.
+export { Popup };

@@ -1,10 +1,11 @@
 "use client";
 import { useMemo, useState } from "react";
-import MapClient from "@/components/MapClient";
+import MapClient, { type MapSelection } from "@/components/MapClient";
 import {
   COUNTRIES,
   STADIUM,
   distanceKm,
+  formatDistance,
   type Country,
   type Listing,
   type EventItem,
@@ -28,6 +29,7 @@ export default function MapPageClient({
   });
   const [showEvents, setShowEvents] = useState(true);
   const [radius, setRadius] = useState<RadiusKm>(5);
+  const [selected, setSelected] = useState<MapSelection>(null);
 
   const stadium = { lat: STADIUM.lat, lng: STADIUM.lng };
 
@@ -109,19 +111,22 @@ export default function MapPageClient({
         </div>
       </div>
 
-      <MapClient listings={visibleListings} events={visibleEvents} height={640} />
+      <MapClient
+        listings={visibleListings}
+        events={visibleEvents}
+        height={640}
+        onSelect={setSelected}
+      />
 
       <div className="eyebrow _12-below" style={{ marginTop: 16 }}>
         Showing {visibleListings.length} venues and {visibleEvents.length} events
         {radius !== "all" && ` within ${radius} km of ${STADIUM.name}`}
       </div>
 
+      <DetailsPanel selection={selected} onClose={() => setSelected(null)} />
+
       <style>{`
-        .map-controls {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
+        .map-controls { display: flex; flex-direction: column; gap: 12px; }
         .map-toggles { display: flex; flex-wrap: wrap; gap: 10px; }
         .map-toggle {
           display: inline-flex; align-items: center; gap: 8px;
@@ -156,3 +161,245 @@ export default function MapPageClient({
     </>
   );
 }
+
+function DetailsPanel({
+  selection,
+  onClose,
+}: {
+  selection: MapSelection;
+  onClose: () => void;
+}) {
+  // Empty state
+  if (!selection) {
+    return (
+      <div className="details-panel details-empty" style={{ marginTop: 40 }}>
+        <div className="eyebrow _8-below">Selected place</div>
+        <p style={{ opacity: 0.6, margin: 0 }}>
+          Click any marker on the map to see address, contact and links here.
+        </p>
+        <style>{detailsCss}</style>
+      </div>
+    );
+  }
+
+  if (selection.kind === "stadium") {
+    return (
+      <div className="details-panel" style={{ marginTop: 40, borderColor: "#ffb81c" }}>
+        <CloseButton onClick={onClose} />
+        <div className="eyebrow _8-below" style={{ color: "#ffb81c", opacity: 1 }}>
+          🏟️ Match venue
+        </div>
+        <h2 className="l-title _12-below">{STADIUM.name}</h2>
+        <div className="m-title _24-below" style={{ opacity: 0.7, fontWeight: 300 }}>
+          {STADIUM.subtitle}
+        </div>
+        <DetailsGrid
+          rows={[
+            { label: "Address", value: STADIUM.address, href: gmapsHref(STADIUM.address) },
+          ]}
+        />
+        <style>{detailsCss}</style>
+      </div>
+    );
+  }
+
+  if (selection.kind === "event") {
+    const e = selection.data;
+    const c = e.country === "all" ? null : COUNTRIES[e.country];
+    return (
+      <div className="details-panel" style={{ marginTop: 40, borderColor: c?.color ?? "#fcf1da" }}>
+        <CloseButton onClick={onClose} />
+        <div
+          className="eyebrow _8-below"
+          style={c ? { color: c.color, opacity: 1 } : { opacity: 1 }}
+        >
+          {c ? `${c.flag} ${c.name}` : "🏆 All nations"} · {e.type}
+        </div>
+        <h2 className="l-title _24-below">{e.title}</h2>
+        <p className="_24-below" style={{ maxWidth: 720 }}>{e.summary}</p>
+        <DetailsGrid
+          rows={[
+            { label: "Date", value: e.date },
+            { label: "Time", value: e.time },
+            { label: "Venue", value: e.venue },
+            { label: "Area", value: e.area },
+          ]}
+        />
+        <style>{detailsCss}</style>
+      </div>
+    );
+  }
+
+  const l = selection.data;
+  const c = COUNTRIES[l.country];
+  return (
+    <div className="details-panel" style={{ marginTop: 40, borderColor: c.color }}>
+      <CloseButton onClick={onClose} />
+      <div className="eyebrow _8-below" style={{ color: c.color, opacity: 1 }}>
+        {c.flag} {c.cuisine} · {l.type}
+      </div>
+      <h2 className="l-title _12-below">{l.name}</h2>
+      <div className="eyebrow _24-below">
+        {l.area} · {l.priceRange} · {formatDistance(distanceKm({ lat: STADIUM.lat, lng: STADIUM.lng }, l))} from the stadium
+      </div>
+      <p className="_24-below" style={{ maxWidth: 720 }}>{l.summary}</p>
+
+      <DetailsGrid
+        rows={[
+          { label: "Address", value: l.address, href: gmapsHref(l.address) },
+          l.phone
+            ? { label: "Phone", value: l.phone, href: `tel:${l.phone.replace(/\s+/g, "")}` }
+            : null,
+          l.url
+            ? { label: "Website", value: prettyUrl(l.url), href: l.url, external: true }
+            : null,
+        ].filter(Boolean) as Row[]}
+      />
+
+      {l.tags.length > 0 && (
+        <div className="details-tags" style={{ marginTop: 24 }}>
+          {l.tags.map((t) => (
+            <span key={t} className="details-tag">{t}</span>
+          ))}
+        </div>
+      )}
+
+      <div className="details-actions">
+        <a
+          href={gmapsHref(l.address)}
+          target="_blank"
+          rel="noreferrer"
+          className="button w-inline-block"
+        >
+          <div>Directions</div>
+        </a>
+        {l.url && (
+          <a
+            href={l.url}
+            target="_blank"
+            rel="noreferrer"
+            className="button outline w-inline-block"
+          >
+            <div>Visit website</div>
+          </a>
+        )}
+      </div>
+
+      <style>{detailsCss}</style>
+    </div>
+  );
+}
+
+type Row = { label: string; value: string; href?: string; external?: boolean };
+
+function DetailsGrid({ rows }: { rows: Row[] }) {
+  return (
+    <dl className="details-grid">
+      {rows.map((r) => (
+        <div key={r.label} className="details-row">
+          <dt className="eyebrow">{r.label}</dt>
+          <dd>
+            {r.href ? (
+              <a
+                href={r.href}
+                target={r.external ? "_blank" : undefined}
+                rel={r.external ? "noreferrer" : undefined}
+                className="details-link"
+              >
+                {r.value}
+              </a>
+            ) : (
+              r.value
+            )}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+function CloseButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Close details"
+      className="details-close"
+    >
+      ×
+    </button>
+  );
+}
+
+function gmapsHref(address: string) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+}
+
+function prettyUrl(url: string) {
+  try {
+    return new URL(url).host.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
+const detailsCss = `
+  .details-panel {
+    position: relative;
+    padding: 32px;
+    border: 1px solid rgba(252,241,218,0.15);
+    border-left-width: 4px;
+    border-radius: 4px;
+    background: rgba(252,241,218,0.04);
+  }
+  .details-empty {
+    border-left-color: rgba(252,241,218,0.3) !important;
+  }
+  .details-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 36px; height: 36px;
+    border-radius: 999px;
+    border: 1px solid rgba(252,241,218,0.25);
+    background: transparent;
+    color: var(--_colours---light);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .details-close:hover {
+    background: rgba(252,241,218,0.08);
+    border-color: var(--_colours---light);
+  }
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px 32px;
+    margin: 0;
+  }
+  .details-row dt { margin-bottom: 6px; }
+  .details-row dd { margin: 0; font-family: DM Sans, Arial, sans-serif; font-size: 16px; line-height: 1.5; }
+  .details-link {
+    color: var(--_colours---light);
+    text-decoration: underline;
+    text-decoration-color: rgba(252,241,218,0.35);
+    text-underline-offset: 3px;
+    transition: text-decoration-color .2s;
+  }
+  .details-link:hover { text-decoration-color: var(--_colours---light); }
+  .details-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .details-tag {
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid rgba(252,241,218,0.25);
+    border-radius: 999px;
+    opacity: 0.85;
+  }
+  .details-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+`;

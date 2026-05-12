@@ -55,6 +55,7 @@ export type Listing = {
   priceRange: "£" | "££" | "£££";
   featured?: boolean;
   url?: string;
+  phone?: string;
 };
 
 export type EventItem = {
@@ -101,6 +102,7 @@ export const LISTINGS: Listing[] = [
     tags: ["curry house", "tandoori", "near stadium"],
     priceRange: "££",
     featured: true,
+    phone: "+44 20 8319 3439",
   },
   {
     id: "i-kesar",
@@ -113,6 +115,7 @@ export const LISTINGS: Listing[] = [
     summary: "Punjabi cooking on Woolwich Road, ten minutes' walk from the stadium.",
     tags: ["punjabi", "tandoori"],
     priceRange: "££",
+    phone: "+44 20 7018 0230",
   },
   {
     id: "j-real-deal",
@@ -162,6 +165,7 @@ export const LISTINGS: Listing[] = [
     tags: ["jollof", "egusi"],
     priceRange: "£",
     featured: true,
+    phone: "+44 20 8854 2171",
   },
   {
     id: "n-marys-takeaway",
@@ -186,6 +190,7 @@ export const LISTINGS: Listing[] = [
     summary: "Sit-down West African restaurant on the main Powis Street drag.",
     tags: ["sit-down", "west african"],
     priceRange: "££",
+    phone: "+44 20 8854 0259",
   },
   {
     id: "n-favourite-african",
@@ -198,6 +203,7 @@ export const LISTINGS: Listing[] = [
     summary: "Plumstead High Street West African spot with a hearty buffet-style menu.",
     tags: ["buffet", "west african"],
     priceRange: "£",
+    phone: "+44 20 3489 9543",
   },
   {
     id: "i-jatt-juliet",
@@ -222,6 +228,7 @@ export const LISTINGS: Listing[] = [
     summary: "Greenwich Indian and Nepalese dining room near the Maritime Museum.",
     tags: ["indian", "nepalese"],
     priceRange: "££",
+    phone: "+44 20 8858 0227",
   },
   {
     id: "i-coriander",
@@ -234,6 +241,7 @@ export const LISTINGS: Listing[] = [
     summary: "Blackheath Indian local serving traditional and contemporary plates.",
     tags: ["curry house"],
     priceRange: "££",
+    phone: "+44 20 8858 7878",
   },
 
   // ===== Central & wider London =====
