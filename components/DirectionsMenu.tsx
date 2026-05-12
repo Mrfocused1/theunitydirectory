@@ -23,6 +23,13 @@ const APPS = [
     href: (lat: number, lng: number) =>
       `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`,
   },
+  {
+    id: "citymapper",
+    label: "Citymapper",
+    color: "#fcd34d",
+    href: (lat: number, lng: number) =>
+      `https://citymapper.com/directions?endcoord=${lat},${lng}`,
+  },
 ];
 
 export default function DirectionsMenu({
