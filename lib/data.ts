@@ -866,19 +866,6 @@ export const LISTINGS: Listing[] = [
     priceRange: "££",
     hours: "Tue–Sun 13:00–24:00, Mon closed",
   },
-  {
-    id: "z-its-nice-to-be-here-bham",
-    name: "It's Nice To Be Here",
-    country: "zimbabwe",
-    type: "restaurant",
-    area: "Birmingham",
-    address: "Birmingham, West Midlands",
-    lat: 52.4862, lng: -1.8904,
-    summary: "Zim-owned Birmingham restaurant-pub with sadza, braai and a beer garden — worth the trip for diaspora food.",
-    tags: ["sadza", "braai", "birmingham"],
-    priceRange: "££",
-    hours: "Tue–Sun 12:00–23:30, Mon closed",
-  },
 ];
 export const FEATURED_LISTINGS = LISTINGS.filter((l) => l.featured);
 export const ALL_AREAS = Array.from(new Set(LISTINGS.map((l) => l.area))).sort();

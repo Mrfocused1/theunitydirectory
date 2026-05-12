@@ -87,7 +87,7 @@ export default function HomePage() {
               <div>Open full map</div>
             </Link>
           </div>
-          <MapClient listings={LISTINGS} height={520} />
+          <MapClient listings={LISTINGS} height={520} focusStadium />
         </div>
       </section>
 
