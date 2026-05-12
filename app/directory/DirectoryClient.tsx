@@ -215,7 +215,7 @@ export default function DirectoryClient({
                   )}
                 </div>
                 <h2 className="m-title" style={{ marginTop: 8, marginBottom: 4 }}>{l.name}</h2>
-                <div className="eyebrow _12-below">{l.area} · {l.priceRange}</div>
+                <div className="eyebrow _12-below">{l.area}</div>
                 <p className="_12-below">{l.summary}</p>
 
                 <ul className="directory-info">

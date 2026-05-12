@@ -178,7 +178,7 @@ function DetailsPanel({
       </div>
       <h2 className="l-title _12-below">{l.name}</h2>
       <div className="eyebrow _24-below">
-        {l.area} · {l.priceRange} · {formatDistance(distanceKm({ lat: STADIUM.lat, lng: STADIUM.lng }, l))} from the stadium
+        {l.area} · {formatDistance(distanceKm({ lat: STADIUM.lat, lng: STADIUM.lng }, l))} from the stadium
       </div>
       <p className="_24-below" style={{ maxWidth: 720 }}>{l.summary}</p>
 
