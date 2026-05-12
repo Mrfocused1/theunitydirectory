@@ -160,6 +160,122 @@ html[data-theme="light"] .details-close:hover {
   border-color: #0c1a12;
 }
 
+/* Venue detail page */
+.venue-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+  font-family: Stack Sans, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  opacity: 0.7;
+  transition: opacity .2s;
+}
+.venue-back:hover { opacity: 1; }
+.venue-header {
+  padding: 32px;
+  border: 1px solid rgba(252,241,218,0.15);
+  border-left-width: 4px;
+  border-radius: 4px;
+  background: rgba(252,241,218,0.04);
+}
+.venue-summary {
+  font-size: 18px;
+  max-width: 720px;
+  line-height: 1.5;
+}
+.venue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px 32px;
+  margin: 0 0 24px;
+}
+.venue-row dt { margin-bottom: 6px; }
+.venue-row dd { margin: 0; font-family: DM Sans, Arial, sans-serif; font-size: 16px; line-height: 1.5; }
+.venue-link {
+  color: var(--_colours---light);
+  text-decoration: underline;
+  text-decoration-color: rgba(252,241,218,0.35);
+  text-underline-offset: 3px;
+}
+.venue-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 24px;
+}
+.venue-tag {
+  font-size: 12px;
+  padding: 4px 10px;
+  border: 1px solid rgba(252,241,218,0.25);
+  border-radius: 999px;
+  opacity: 0.85;
+}
+.venue-actions {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  align-items: center;
+}
+.venue-ig {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border: 1px solid var(--_colours---light);
+  border-radius: 2px;
+  color: var(--_colours---light);
+  transition: all .2s;
+}
+.venue-ig:hover {
+  background: var(--_colours---light);
+  color: #0c1a12;
+}
+html[data-theme="light"] .venue-header,
+html[data-theme="light"] .venue-tag,
+html[data-theme="light"] .venue-ig {
+  border-color: rgba(12,26,18,0.15);
+}
+html[data-theme="light"] .venue-tag,
+html[data-theme="light"] .venue-link {
+  color: #0c1a12;
+}
+html[data-theme="light"] .venue-link {
+  text-decoration-color: rgba(12,26,18,0.35);
+}
+html[data-theme="light"] .venue-ig:hover {
+  background: #0c1a12;
+  color: #fcf1da;
+}
+html[data-theme="light"] .venue-header {
+  background: rgba(12,26,18,0.04);
+}
+
+/* Featured spots horizontal scroll on mobile */
+.featured-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+}
+@media (max-width: 767px) {
+  .featured-row {
+    display: flex;
+    grid-template-columns: none;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 16px;
+    margin-left: -2%;
+    margin-right: -2%;
+    padding-left: 2%;
+    padding-right: 2%;
+    -webkit-overflow-scrolling: touch;
+  }
+  .featured-row > * {
+    flex: 0 0 78%;
+    min-width: 78%;
+    scroll-snap-align: start;
+  }
+}
+
 /* Logo: invert white → near-black on cream */
 html[data-theme="light"] .tud-logo,
 html[data-theme="light"] .footer-image,

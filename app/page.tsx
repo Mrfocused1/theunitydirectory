@@ -95,48 +95,41 @@ export default function HomePage() {
       <section className="section _0-top">
         <div className="container">
           <h1 className="l-title _48-below">Featured spots</h1>
-          <div className="w-dyn-list">
-            <div role="list" className="grid _3 w-dyn-items">
-              {FEATURED_LISTINGS.map((l) => (
-                <div key={l.id} role="listitem" className="w-dyn-item">
-                  <div>
-                    <Link href={`/directory?country=${l.country}#${l.id}`} className="card team _48-below w-inline-block">
-                      <div className="card-inner base-align">
-                        <div>
-                          <div className="eyebrow" style={{ color: COUNTRIES[l.country].color, opacity: 1 }}>
-                            {COUNTRIES[l.country].flag} {COUNTRIES[l.country].cuisine}
-                          </div>
-                          <div className="m-title">{l.name}</div>
-                        </div>
-                      </div>
-                      <div className="card-gradient" />
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`/images/${COUNTRY_HERO_IMG[l.country]}`}
-                        alt={l.name}
-                        loading="lazy"
-                        className="card-image"
-                      />
-                    </Link>
+          <div role="list" className="featured-row">
+            {FEATURED_LISTINGS.map((l) => (
+              <div key={l.id} role="listitem">
+                <Link href={`/directory/${l.id}`} className="card team _48-below w-inline-block">
+                  <div className="card-inner base-align">
                     <div>
-                      <h2 className="m-title _12-below">{l.name}</h2>
-                      <div className="balance">
-                        <p className="_12-below">{l.summary}</p>
-                        <div className="eyebrow _12-below">
-                          {l.area} · {l.priceRange} · {l.type}
-                        </div>
-                        <Link
-                          href={`/directory?country=${l.country}#${l.id}`}
-                          className="button outline w-button"
-                        >
-                          See details
-                        </Link>
+                      <div className="eyebrow" style={{ color: COUNTRIES[l.country].color, opacity: 1 }}>
+                        {COUNTRIES[l.country].flag} {COUNTRIES[l.country].cuisine}
                       </div>
+                      <div className="m-title">{l.name}</div>
                     </div>
                   </div>
+                  <div className="card-gradient" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`/images/${COUNTRY_HERO_IMG[l.country]}`}
+                    alt={l.name}
+                    loading="lazy"
+                    className="card-image"
+                  />
+                </Link>
+                <div>
+                  <h2 className="m-title _12-below">{l.name}</h2>
+                  <div className="balance">
+                    <p className="_12-below">{l.summary}</p>
+                    <div className="eyebrow _12-below">
+                      {l.area} · {l.type}
+                    </div>
+                    <Link href={`/directory/${l.id}`} className="button outline w-button">
+                      See details
+                    </Link>
+                  </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
