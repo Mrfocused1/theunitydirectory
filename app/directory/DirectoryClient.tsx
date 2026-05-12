@@ -36,25 +36,40 @@ export default function DirectoryClient({
   const [mode, setMode] = useState<ProximityMode>("stadium");
   const [radius, setRadius] = useState<RadiusKm>(5);
   const [me, setMe] = useState<LatLng | null>(null);
-  const [geoState, setGeoState] = useState<"idle" | "asking" | "denied" | "unavailable">("idle");
+  const [geoError, setGeoError] = useState<string | null>(null);
+  const [geoStatus, setGeoStatus] = useState<"idle" | "asking">("idle");
 
   function requestLocation() {
+    setGeoError(null);
     if (!("geolocation" in navigator)) {
-      setGeoState("unavailable");
+      setGeoError("Your browser doesn't support location.");
       return;
     }
-    setGeoState("asking");
+    if (!window.isSecureContext) {
+      setGeoError("Location only works on a secure (HTTPS) connection.");
+      return;
+    }
+    setGeoStatus("asking");
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setMe({ lat: pos.coords.latitude, lng: pos.coords.longitude });
         setMode("me");
-        setGeoState("idle");
+        setGeoStatus("idle");
       },
       (err) => {
-        setGeoState(err.code === err.PERMISSION_DENIED ? "denied" : "unavailable");
+        setGeoStatus("idle");
         setMode("stadium");
+        if (err.code === err.PERMISSION_DENIED) {
+          setGeoError(
+            "Location permission denied. Open site settings in your browser and allow Location for this site, then try again."
+          );
+        } else if (err.code === err.TIMEOUT) {
+          setGeoError("Took too long to get your location. Try again or check Wi-Fi/Location Services.");
+        } else {
+          setGeoError(`Couldn't get your location (${err.message || "unknown error"}).`);
+        }
       },
-      { enableHighAccuracy: false, timeout: 8000, maximumAge: 300_000 }
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 60_000 }
     );
   }
 
@@ -111,9 +126,18 @@ export default function DirectoryClient({
             aria-selected={mode === "me"}
             className="prox-mode"
             data-active={mode === "me"}
-            onClick={() => (me ? setMode("me") : requestLocation())}
+            disabled={geoStatus === "asking"}
+            onClick={() => {
+              if (geoStatus === "asking") return;
+              if (me && mode !== "me") {
+                setMode("me");
+              } else {
+                requestLocation();
+              }
+            }}
           >
-            <MeGlyph /> {me ? "Near me" : geoState === "asking" ? "Locating…" : "Use my location"}
+            <MeGlyph />{" "}
+            {geoStatus === "asking" ? "Locating…" : me ? "Near me" : "Use my location"}
           </button>
           <button
             type="button"
@@ -148,14 +172,9 @@ export default function DirectoryClient({
         )}
       </div>
 
-      {mode === "me" && geoState === "denied" && (
-        <div className="prox-warning">
-          Location permission denied. Enable it in your browser to use &ldquo;Near me&rdquo;.
-        </div>
-      )}
-      {geoState === "unavailable" && (
-        <div className="prox-warning">
-          Couldn&rsquo;t get your location. Try again, or use &ldquo;Near the stadium&rdquo;.
+      {geoError && (
+        <div className="prox-warning" role="alert">
+          {geoError}
         </div>
       )}
 
