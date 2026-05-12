@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import type { Listing, EventItem } from "@/lib/data";
+import type { Listing } from "@/lib/data";
 import type { MapSelection } from "./Map";
 
 const Map = dynamic(() => import("./Map"), {
@@ -27,7 +27,6 @@ const Map = dynamic(() => import("./Map"), {
 
 export default function MapClient(props: {
   listings: Listing[];
-  events: EventItem[];
   height?: number | string;
   focusStadium?: boolean;
   onSelect?: (sel: MapSelection) => void;

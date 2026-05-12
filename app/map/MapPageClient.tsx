@@ -8,17 +8,14 @@ import {
   formatDistance,
   type Country,
   type Listing,
-  type EventItem,
 } from "@/lib/data";
 
 type RadiusKm = 2 | 5 | 10 | "all";
 
 export default function MapPageClient({
   listings,
-  events,
 }: {
   listings: Listing[];
-  events: EventItem[];
   countries: typeof COUNTRIES;
 }) {
   const [active, setActive] = useState<Record<Country, boolean>>({
@@ -27,7 +24,6 @@ export default function MapPageClient({
     zimbabwe: true,
     india: true,
   });
-  const [showEvents, setShowEvents] = useState(true);
   const [radius, setRadius] = useState<RadiusKm>(5);
   const [selected, setSelected] = useState<MapSelection>(null);
 
@@ -40,16 +36,6 @@ export default function MapPageClient({
       return true;
     });
   }, [listings, active, radius]);
-
-  const visibleEvents = useMemo(() => {
-    if (!showEvents) return [];
-    return events.filter((e) => {
-      const okCountry = e.country === "all" || active[e.country as Country];
-      if (!okCountry) return false;
-      if (radius !== "all" && distanceKm(stadium, e) > radius) return false;
-      return true;
-    });
-  }, [events, active, radius, showEvents]);
 
   return (
     <>
@@ -74,22 +60,6 @@ export default function MapPageClient({
               {COUNTRIES[c].flag} {COUNTRIES[c].name}
             </button>
           ))}
-          <button
-            type="button"
-            onClick={() => setShowEvents((s) => !s)}
-            className="map-toggle"
-            data-active={showEvents}
-            style={{ borderColor: "#fcf1da" }}
-          >
-            <span
-              className="map-toggle-dot"
-              style={{
-                background: showEvents ? "#fcf1da" : "transparent",
-                borderColor: "#fcf1da",
-              }}
-            />
-            🏆 Events
-          </button>
         </div>
 
         <div className="map-radius">
@@ -111,15 +81,10 @@ export default function MapPageClient({
         </div>
       </div>
 
-      <MapClient
-        listings={visibleListings}
-        events={visibleEvents}
-        height={640}
-        onSelect={setSelected}
-      />
+      <MapClient listings={visibleListings} height={640} onSelect={setSelected} />
 
       <div className="eyebrow _12-below" style={{ marginTop: 16 }}>
-        Showing {visibleListings.length} venues and {visibleEvents.length} events
+        Showing {visibleListings.length} {visibleListings.length === 1 ? "place" : "places"}
         {radius !== "all" && ` within ${radius} km of ${STADIUM.name}`}
       </div>
 
@@ -169,7 +134,6 @@ function DetailsPanel({
   selection: MapSelection;
   onClose: () => void;
 }) {
-  // Empty state
   if (!selection) {
     return (
       <div className="details-panel details-empty" style={{ marginTop: 40 }}>
@@ -196,33 +160,6 @@ function DetailsPanel({
         <DetailsGrid
           rows={[
             { label: "Address", value: STADIUM.address, href: gmapsHref(STADIUM.address) },
-          ]}
-        />
-        <style>{detailsCss}</style>
-      </div>
-    );
-  }
-
-  if (selection.kind === "event") {
-    const e = selection.data;
-    const c = e.country === "all" ? null : COUNTRIES[e.country];
-    return (
-      <div className="details-panel" style={{ marginTop: 40, borderColor: c?.color ?? "#fcf1da" }}>
-        <CloseButton onClick={onClose} />
-        <div
-          className="eyebrow _8-below"
-          style={c ? { color: c.color, opacity: 1 } : { opacity: 1 }}
-        >
-          {c ? `${c.flag} ${c.name}` : "🏆 All nations"} · {e.type}
-        </div>
-        <h2 className="l-title _24-below">{e.title}</h2>
-        <p className="_24-below" style={{ maxWidth: 720 }}>{e.summary}</p>
-        <DetailsGrid
-          rows={[
-            { label: "Date", value: e.date },
-            { label: "Time", value: e.time },
-            { label: "Venue", value: e.venue },
-            { label: "Area", value: e.area },
           ]}
         />
         <style>{detailsCss}</style>

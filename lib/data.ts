@@ -58,20 +58,6 @@ export type Listing = {
   phone?: string;
 };
 
-export type EventItem = {
-  id: string;
-  title: string;
-  country: Country | "all";
-  type: "watch-party" | "meetup" | "pop-up" | "tournament";
-  date: string;
-  time: string;
-  venue: string;
-  area: string;
-  lat: number;
-  lng: number;
-  summary: string;
-};
-
 // Real London-based venues across the four cuisines. Listings near The Valley
 // (Charlton / Woolwich / Greenwich / Lewisham / Blackheath) are concentrated
 // first so the "near stadium" view has plenty to show.
@@ -501,105 +487,5 @@ export const LISTINGS: Listing[] = [
     priceRange: "£",
   },
 ];
-
-export const EVENTS: EventItem[] = [
-  {
-    id: "e-semi-1-watch",
-    title: "Semi 1 Watch Party · Nigeria vs Zimbabwe",
-    country: "all",
-    type: "watch-party",
-    date: "Tuesday 26 May 2026",
-    time: "7:00 pm",
-    venue: "Tasty Woolwich, Plumstead Road",
-    area: "Woolwich",
-    lat: 51.4901, lng: 0.0732,
-    summary: "Big screens five minutes from the ground. Doors at 6:30, kick-off 7:30.",
-  },
-  {
-    id: "e-semi-2-watch",
-    title: "Semi 2 Watch Party · India vs Jamaica",
-    country: "all",
-    type: "watch-party",
-    date: "Wednesday 27 May 2026",
-    time: "7:00 pm",
-    venue: "Jatt & Juliet, Greenwich",
-    area: "Greenwich",
-    lat: 51.4889, lng: 0.0070,
-    summary: "Crossover menu of Indian small plates and Caribbean patties for the second semi.",
-  },
-  {
-    id: "e-pre-stadium",
-    title: "Pre-Stadium Suya Pop-Up",
-    country: "nigeria",
-    type: "pop-up",
-    date: "Tuesday 26 May 2026",
-    time: "5:30 pm",
-    venue: "Charlton Park gates",
-    area: "Charlton",
-    lat: 51.4870, lng: 0.0410,
-    summary: "Smoke-grilled suya skewers on the walk from Charlton station to The Valley.",
-  },
-  {
-    id: "e-zim-supper",
-    title: "Warriors Send-Off Supper",
-    country: "zimbabwe",
-    type: "pop-up",
-    date: "Sunday 24 May 2026",
-    time: "1:00 pm",
-    venue: "Cooking With Caz (venue TBC)",
-    area: "Central London",
-    lat: 51.5074, lng: -0.1278,
-    summary: "Pop-up Zim supper club to send off the Warriors. Ticketed; sign up via the enquiry form.",
-  },
-  {
-    id: "e-naija-meetup",
-    title: "Naija Diaspora Meetup",
-    country: "nigeria",
-    type: "meetup",
-    date: "Friday 22 May 2026",
-    time: "6:30 pm",
-    venue: "Chuku's, Tottenham",
-    area: "Tottenham",
-    lat: 51.5880, lng: -0.0700,
-    summary: "Pre-tournament social with sharing plates and a highlife DJ from 8 pm.",
-  },
-  {
-    id: "e-reggae-night",
-    title: "Reggae Roots Night",
-    country: "jamaica",
-    type: "meetup",
-    date: "Saturday 23 May 2026",
-    time: "8:00 pm",
-    venue: "Negril, Brixton",
-    area: "Brixton",
-    lat: 51.4546, lng: -0.1213,
-    summary: "Sound-system set with three selectors. Jerk grill running through the night.",
-  },
-  {
-    id: "e-5aside",
-    title: "Diaspora 5-a-side Tournament",
-    country: "all",
-    type: "tournament",
-    date: "Sunday 24 May 2026",
-    time: "10:00 am",
-    venue: "PowerLeague Charlton",
-    area: "Charlton",
-    lat: 51.4910, lng: 0.0290,
-    summary: "Sixteen teams, four nations, one bracket. Sign up via the enquiry form.",
-  },
-  {
-    id: "e-finals-brunch",
-    title: "Grand Finals Day Brunch",
-    country: "all",
-    type: "watch-party",
-    date: "Saturday 30 May 2026",
-    time: "12:00 pm",
-    venue: "Rifa's Caribbean, Charlton",
-    area: "Charlton",
-    lat: 51.4860, lng: 0.0370,
-    summary: "Two games on the big screen, two minutes from the ground. Brunch from noon.",
-  },
-];
-
 export const FEATURED_LISTINGS = LISTINGS.filter((l) => l.featured);
 export const ALL_AREAS = Array.from(new Set(LISTINGS.map((l) => l.area))).sort();

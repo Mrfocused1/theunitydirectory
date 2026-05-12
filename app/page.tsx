@@ -1,10 +1,8 @@
 import Link from "next/link";
 import MapClient from "@/components/MapClient";
-import { COUNTRIES, FEATURED_LISTINGS, EVENTS, LISTINGS, type Country } from "@/lib/data";
+import { COUNTRIES, FEATURED_LISTINGS, LISTINGS, type Country } from "@/lib/data";
 
 export default function HomePage() {
-  const featuredEvents = EVENTS.slice(0, 3);
-
   return (
     <>
       {/* Hero */}
@@ -89,7 +87,7 @@ export default function HomePage() {
               <div>Open full map</div>
             </Link>
           </div>
-          <MapClient listings={LISTINGS} events={EVENTS} height={520} />
+          <MapClient listings={LISTINGS} height={520} />
         </div>
       </section>
 
@@ -138,43 +136,6 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Upcoming events */}
-      <section className="section _0-top">
-        <div className="container">
-          <div className="holder split _24-below">
-            <h1 className="l-title">Upcoming events</h1>
-            <Link href="/events" className="button outline w-inline-block">
-              <div>All events</div>
-            </Link>
-          </div>
-          <div className="w-dyn-list">
-            <div role="list" className="grid _3 w-dyn-items">
-              {featuredEvents.map((e) => {
-                const c = e.country === "all" ? null : COUNTRIES[e.country];
-                return (
-                  <div key={e.id} role="listitem" className="w-dyn-item">
-                    <div>
-                      <div>
-                        <div className="eyebrow" style={c ? { color: c.color, opacity: 1 } : undefined}>
-                          {c ? `${c.flag} ${c.name}` : "🏆 All nations"} · {e.type}
-                        </div>
-                        <h2 className="m-title _12-below">{e.title}</h2>
-                        <div className="balance">
-                          <p className="_12-below">{e.summary}</p>
-                          <div className="eyebrow _12-below">
-                            {e.date} · {e.time} · {e.venue}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
             </div>
           </div>
         </div>

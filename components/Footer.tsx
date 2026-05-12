@@ -21,7 +21,6 @@ export default function Footer() {
               <Link href="/map" className="footer-link">Map</Link>
             </div>
             <div className="centre-align stack">
-              <Link href="/events" className="footer-link">Events</Link>
               <Link href="/enquire" className="footer-link">Enquire</Link>
             </div>
           </div>

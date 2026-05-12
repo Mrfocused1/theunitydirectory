@@ -1,13 +1,12 @@
 "use client";
 import { useEffect } from "react";
-import { MapContainer, TileLayer, CircleMarker, Marker, Popup, Tooltip, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, CircleMarker, Marker, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { COUNTRIES, STADIUM, type Country, type Listing, type EventItem } from "@/lib/data";
+import { COUNTRIES, STADIUM, type Listing } from "@/lib/data";
 
 export type MapSelection =
   | { kind: "listing"; data: Listing }
-  | { kind: "event"; data: EventItem }
   | { kind: "stadium" }
   | null;
 
@@ -52,22 +51,15 @@ const stadiumIcon = L.divIcon({
 
 export default function Map({
   listings,
-  events,
   height = 480,
   focusStadium = false,
   onSelect,
 }: {
   listings: Listing[];
-  events: EventItem[];
   height?: number | string;
   focusStadium?: boolean;
   onSelect?: (sel: MapSelection) => void;
 }) {
-  const allPoints = [
-    ...listings.map((p) => ({ lat: p.lat, lng: p.lng })),
-    ...events.map((p) => ({ lat: p.lat, lng: p.lng })),
-  ];
-
   return (
     <div style={{ height, width: "100%", borderRadius: 2, overflow: "hidden", position: "relative" }}>
       <MapContainer
@@ -80,9 +72,8 @@ export default function Map({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-        <FitBounds points={allPoints} focusStadium={focusStadium} />
+        <FitBounds points={listings.map((l) => ({ lat: l.lat, lng: l.lng }))} focusStadium={focusStadium} />
 
-        {/* Stadium marker */}
         <Marker
           position={[STADIUM.lat, STADIUM.lng]}
           icon={stadiumIcon}
@@ -105,22 +96,6 @@ export default function Map({
               eventHandlers={{ click: () => onSelect?.({ kind: "listing", data: p }) }}
             >
               <Tooltip>{p.name}</Tooltip>
-            </CircleMarker>
-          );
-        })}
-
-        {events.map((p) => {
-          const country = p.country === "all" ? null : (p.country as Country);
-          const color = country ? COUNTRIES[country].color : "#fcf1da";
-          return (
-            <CircleMarker
-              key={`e-${p.id}`}
-              center={[p.lat, p.lng]}
-              radius={11}
-              pathOptions={{ color: "#0c1a12", weight: 2, fillColor: color, fillOpacity: 0.95 }}
-              eventHandlers={{ click: () => onSelect?.({ kind: "event", data: p }) }}
-            >
-              <Tooltip>{p.title}</Tooltip>
             </CircleMarker>
           );
         })}
@@ -162,6 +137,3 @@ export default function Map({
     </div>
   );
 }
-
-// Re-export Popup so it doesn't get tree-shaken from leaflet — used elsewhere.
-export { Popup };
