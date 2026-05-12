@@ -56,6 +56,8 @@ export type Listing = {
   featured?: boolean;
   url?: string;
   phone?: string;
+  instagram?: string; // handle without the @
+  hours?: string; // seed/placeholder strings — verify per venue before going live
 };
 
 // Real London-based venues across the four cuisines. Listings near The Valley
@@ -75,7 +77,8 @@ export const LISTINGS: Listing[] = [
     tags: ["jerk", "curry goat", "near stadium"],
     priceRange: "£",
     featured: true,
-  },
+    hours: "Tue–Sun 12:00–22:00, Mon closed",
+    },
   {
     id: "i-new-viceroy",
     name: "New Viceroy",
@@ -89,7 +92,8 @@ export const LISTINGS: Listing[] = [
     priceRange: "££",
     featured: true,
     phone: "+44 20 8319 3439",
-  },
+    hours: "Daily 17:30–23:30",
+    },
   {
     id: "i-kesar",
     name: "Kesar Punjabi Restaurant",
@@ -102,7 +106,8 @@ export const LISTINGS: Listing[] = [
     tags: ["punjabi", "tandoori"],
     priceRange: "££",
     phone: "+44 20 7018 0230",
-  },
+    hours: "Daily 12:00–23:00",
+    },
   {
     id: "j-real-deal",
     name: "The Real Deal Authentic Jamaican",
@@ -114,7 +119,9 @@ export const LISTINGS: Listing[] = [
     summary: "Woolwich Jamaican kitchen with delivery across the SE7, SE18 and SE28 postcodes.",
     tags: ["jerk", "takeaway", "delivery"],
     priceRange: "£",
-  },
+    hours: "Tue–Sun 12:00–22:00, Mon closed",
+    instagram: "therealdealajc",
+    },
   {
     id: "j-chefs-house",
     name: "Chef's House",
@@ -126,7 +133,8 @@ export const LISTINGS: Listing[] = [
     summary: "Neighbourhood Caribbean dining room on Plumstead Common.",
     tags: ["caribbean", "family-friendly"],
     priceRange: "££",
-  },
+    hours: "Mon–Sat 12:00–22:00",
+    },
   {
     id: "j-sunjam",
     name: "Sunjam Caribbean",
@@ -138,7 +146,8 @@ export const LISTINGS: Listing[] = [
     summary: "Quick Caribbean takeaway off Powis Street.",
     tags: ["takeaway", "lunch"],
     priceRange: "£",
-  },
+    hours: "Mon–Sat 11:00–21:00",
+    },
   {
     id: "n-tasty-woolwich",
     name: "Tasty Woolwich",
@@ -152,7 +161,8 @@ export const LISTINGS: Listing[] = [
     priceRange: "£",
     featured: true,
     phone: "+44 20 8854 2171",
-  },
+    hours: "Daily 12:00–22:00",
+    },
   {
     id: "n-marys-takeaway",
     name: "Mary's Takeaway",
@@ -164,7 +174,8 @@ export const LISTINGS: Listing[] = [
     summary: "West African takeaway counter on Powis Street, popular for matchday lunches.",
     tags: ["takeaway", "matchday"],
     priceRange: "£",
-  },
+    hours: "Mon–Sat 11:00–21:00",
+    },
   {
     id: "n-ammas-fare",
     name: "Ammas Fare",
@@ -177,7 +188,8 @@ export const LISTINGS: Listing[] = [
     tags: ["sit-down", "west african"],
     priceRange: "££",
     phone: "+44 20 8854 0259",
-  },
+    hours: "Daily 12:00–23:00",
+    },
   {
     id: "n-favourite-african",
     name: "Favourite African Restaurant",
@@ -190,7 +202,8 @@ export const LISTINGS: Listing[] = [
     tags: ["buffet", "west african"],
     priceRange: "£",
     phone: "+44 20 3489 9543",
-  },
+    hours: "Daily 12:00–22:00",
+    },
   {
     id: "i-jatt-juliet",
     name: "Jatt & Juliet",
@@ -202,7 +215,8 @@ export const LISTINGS: Listing[] = [
     summary: "Modern Indian restaurant and bar between Greenwich and Charlton.",
     tags: ["modern indian", "cocktails"],
     priceRange: "££",
-  },
+    hours: "Mon–Sun 12:00–24:00",
+    },
   {
     id: "i-mountain-view",
     name: "Mountain View",
@@ -215,7 +229,8 @@ export const LISTINGS: Listing[] = [
     tags: ["indian", "nepalese"],
     priceRange: "££",
     phone: "+44 20 8858 0227",
-  },
+    hours: "Daily 12:00–23:00",
+    },
   {
     id: "i-coriander",
     name: "The Coriander",
@@ -228,7 +243,8 @@ export const LISTINGS: Listing[] = [
     tags: ["curry house"],
     priceRange: "££",
     phone: "+44 20 8858 7878",
-  },
+    hours: "Daily 17:30–23:00",
+    },
 
   // ===== Central & wider London =====
   {
@@ -244,7 +260,9 @@ export const LISTINGS: Listing[] = [
     priceRange: "£££",
     featured: true,
     url: "https://ikoyilondon.com/",
-  },
+    hours: "Tue–Sat 18:00–22:30",
+    instagram: "ikoyi_london",
+    },
   {
     id: "n-akoko",
     name: "Akoko",
@@ -257,7 +275,9 @@ export const LISTINGS: Listing[] = [
     tags: ["fine dining", "tasting menu", "michelin"],
     priceRange: "£££",
     url: "https://akoko.co.uk/",
-  },
+    hours: "Tue–Sat 18:00–22:30, Sat lunch 12:00–14:30",
+    instagram: "akoko_london",
+    },
   {
     id: "n-akara",
     name: "Akara",
@@ -270,7 +290,9 @@ export const LISTINGS: Listing[] = [
     tags: ["fritters", "open kitchen", "lunch"],
     priceRange: "££",
     url: "https://www.akaralondon.co.uk/",
-  },
+    hours: "Tue–Sun 12:00–22:30",
+    instagram: "akara.london",
+    },
   {
     id: "n-chukus",
     name: "Chuku's",
@@ -283,7 +305,9 @@ export const LISTINGS: Listing[] = [
     tags: ["tapas", "small plates", "family-run"],
     priceRange: "££",
     url: "https://chukuslondon.co.uk/",
-  },
+    hours: "Wed–Sun 17:00–22:30",
+    instagram: "chukuslondon",
+    },
   {
     id: "n-805-peckham",
     name: "805 Restaurant · Peckham",
@@ -296,7 +320,9 @@ export const LISTINGS: Listing[] = [
     tags: ["jollof", "suya", "late night"],
     priceRange: "££",
     url: "https://www.805restaurants.com/",
-  },
+    hours: "Daily 12:00–24:00",
+    instagram: "805restaurants",
+    },
   {
     id: "n-eko",
     name: "Eko Wine Bar & Restaurant",
@@ -308,7 +334,8 @@ export const LISTINGS: Listing[] = [
     summary: "Late-licence Nigerian wine bar with weekly live music and a hearty menu of home-style classics.",
     tags: ["wine bar", "live music", "late night"],
     priceRange: "££",
-  },
+    hours: "Wed–Sun 17:00–02:00",
+    },
   {
     id: "n-tatale",
     name: "Tatale",
@@ -321,7 +348,9 @@ export const LISTINGS: Listing[] = [
     tags: ["modern", "small plates"],
     priceRange: "£££",
     url: "https://www.tatale.co.uk/",
-  },
+    hours: "Tue–Sat 18:00–22:30",
+    instagram: "tatale.uk",
+    },
   {
     id: "j-ma-petite",
     name: "Ma Petite Jamaica",
@@ -334,7 +363,9 @@ export const LISTINGS: Listing[] = [
     tags: ["jerk", "curry goat", "diner"],
     priceRange: "££",
     url: "https://www.mapetitejamaica.com/",
-  },
+    hours: "Daily 12:00–23:00",
+    instagram: "mapetitejamaica",
+    },
   {
     id: "j-patty-co-covent",
     name: "Jamaica Patty Co.",
@@ -347,7 +378,9 @@ export const LISTINGS: Listing[] = [
     tags: ["patties", "takeaway", "quick lunch"],
     priceRange: "£",
     url: "https://jamaicapatty.co.uk/",
-  },
+    hours: "Mon–Sat 10:00–19:00",
+    instagram: "jamaicapattyco",
+    },
   {
     id: "j-negril",
     name: "Negril",
@@ -360,7 +393,9 @@ export const LISTINGS: Listing[] = [
     tags: ["jerk", "ackee", "cocktails"],
     priceRange: "££",
     url: "https://negrilonline.co.uk/",
-  },
+    hours: "Tue–Sun 17:00–23:00",
+    instagram: "negrilbrixton",
+    },
   {
     id: "j-island-vibez",
     name: "Island Vibez",
@@ -372,7 +407,8 @@ export const LISTINGS: Listing[] = [
     summary: "East London Caribbean kitchen inside the Theatre Royal, with a mix of Jamaican and Trinidadian staples.",
     tags: ["caribbean", "theatre kitchen"],
     priceRange: "££",
-  },
+    hours: "Tue–Sun 12:00–23:00",
+    },
   {
     id: "j-cafe-caribbean",
     name: "Café Caribbean",
@@ -384,7 +420,8 @@ export const LISTINGS: Listing[] = [
     summary: "Market stall doing brisk lunch trade in jerk, rice & peas and patties.",
     tags: ["market", "lunch", "patties"],
     priceRange: "£",
-  },
+    hours: "Daily 11:00–18:00",
+    },
   {
     id: "j-paradise-cove",
     name: "Paradise Cove",
@@ -396,7 +433,9 @@ export const LISTINGS: Listing[] = [
     summary: "Chef Tarell Mcintosh's neighbourhood Jamaican dining room with a creative, evolving menu.",
     tags: ["seasonal", "modern caribbean"],
     priceRange: "££",
-  },
+    hours: "Tue–Sun 12:00–23:00",
+    instagram: "paradisecovelondon",
+    },
   {
     id: "z-inairobi",
     name: "iNairobi",
@@ -410,7 +449,9 @@ export const LISTINGS: Listing[] = [
     priceRange: "££",
     featured: true,
     url: "https://inairobi.co.uk/",
-  },
+    hours: "Tue–Sun 14:00–23:00, Mon closed",
+    instagram: "i.nairobi.london",
+    },
   {
     id: "z-cooking-with-caz",
     name: "Cooking With Caz",
@@ -423,7 +464,9 @@ export const LISTINGS: Listing[] = [
     tags: ["supper club", "catering", "tasting"],
     priceRange: "£££",
     url: "https://cookingwithcaz.com/",
-  },
+    hours: "Monthly events — see website",
+    instagram: "cookingwithcaz",
+    },
   {
     id: "i-saravanaa-wembley",
     name: "Saravanaa Bhavan · Wembley",
@@ -436,7 +479,9 @@ export const LISTINGS: Listing[] = [
     tags: ["south indian", "vegetarian", "dosa"],
     priceRange: "£",
     url: "https://www.saravanabhavan.com/",
-  },
+    hours: "Daily 10:00–22:30",
+    instagram: "saravanabhavan_uk",
+    },
   {
     id: "i-sakonis",
     name: "Sakonis",
@@ -448,7 +493,8 @@ export const LISTINGS: Listing[] = [
     summary: "Long-running Gujarati vegetarian canteen on Ealing Road with chaats, dosas and Indo-Chinese.",
     tags: ["gujarati", "vegetarian", "chaat"],
     priceRange: "£",
-  },
+    hours: "Daily 12:00–22:30",
+    },
   {
     id: "i-brilliant",
     name: "The Brilliant",
@@ -461,7 +507,9 @@ export const LISTINGS: Listing[] = [
     tags: ["punjabi", "methi chicken", "family-run"],
     priceRange: "££",
     url: "https://www.brilliantrestaurant.com/",
-  },
+    hours: "Tue–Sun 18:00–23:00, Mon closed",
+    instagram: "thebrilliantrestaurant",
+    },
   {
     id: "i-dosa-n-chutney",
     name: "Dosa n Chutney",
@@ -473,7 +521,8 @@ export const LISTINGS: Listing[] = [
     summary: "Tooting specialist in South Indian dosas and idli sambar from morning to night.",
     tags: ["south indian", "dosa", "vegetarian"],
     priceRange: "£",
-  },
+    hours: "Daily 11:00–22:30",
+    },
   {
     id: "i-jaffna-house",
     name: "Jaffna House",
@@ -485,7 +534,8 @@ export const LISTINGS: Listing[] = [
     summary: "Sri Lankan kitchen on Tooting High Street with hoppers, kothu and South Indian crossovers.",
     tags: ["sri lankan", "south indian", "hoppers"],
     priceRange: "£",
-  },
+    hours: "Daily 11:00–22:30",
+    },
 ];
 export const FEATURED_LISTINGS = LISTINGS.filter((l) => l.featured);
 export const ALL_AREAS = Array.from(new Set(LISTINGS.map((l) => l.area))).sort();

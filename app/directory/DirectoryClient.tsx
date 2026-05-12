@@ -214,16 +214,69 @@ export default function DirectoryClient({
                     <span className="directory-distance">{formatDistance(l.distance)}</span>
                   )}
                 </div>
-                <h2 className="m-title _12-below" style={{ marginTop: 8 }}>{l.name}</h2>
-                <p className="_12-below">{l.summary}</p>
+                <h2 className="m-title" style={{ marginTop: 8, marginBottom: 4 }}>{l.name}</h2>
                 <div className="eyebrow _12-below">{l.area} · {l.priceRange}</div>
-                <div className="directory-tags _12-below">
-                  {l.tags.map((t) => (
-                    <span key={t} className="directory-tag">{t}</span>
-                  ))}
-                </div>
-                <div className="balance">
+                <p className="_12-below">{l.summary}</p>
+
+                <ul className="directory-info">
+                  <li className="directory-info-row">
+                    <PinIcon />
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.address)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="directory-info-link"
+                    >
+                      {l.address}
+                    </a>
+                  </li>
+                  {l.phone && (
+                    <li className="directory-info-row">
+                      <PhoneIcon />
+                      <a href={`tel:${l.phone.replace(/\s+/g, "")}`} className="directory-info-link">
+                        {l.phone}
+                      </a>
+                    </li>
+                  )}
+                  {l.hours && (
+                    <li className="directory-info-row">
+                      <ClockIcon />
+                      <span>{l.hours}</span>
+                    </li>
+                  )}
+                </ul>
+
+                {l.tags.length > 0 && (
+                  <div className="directory-tags _12-below">
+                    {l.tags.map((t) => (
+                      <span key={t} className="directory-tag">{t}</span>
+                    ))}
+                  </div>
+                )}
+
+                <div className="directory-actions">
                   <DirectionsMenu lat={l.lat} lng={l.lng} variant="outline" />
+                  {l.url && (
+                    <a
+                      href={l.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="button outline w-inline-block"
+                    >
+                      <div>Website</div>
+                    </a>
+                  )}
+                  {l.instagram && (
+                    <a
+                      href={`https://instagram.com/${l.instagram}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`${l.name} on Instagram`}
+                      className="directory-ig"
+                    >
+                      <InstagramIcon />
+                    </a>
+                  )}
                 </div>
               </div>
             </article>
@@ -337,6 +390,36 @@ export default function DirectoryClient({
           color: #0c1a12;
           white-space: nowrap;
         }
+        .directory-info {
+          list-style: none;
+          margin: 0 0 16px;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          font-size: 14px;
+          line-height: 1.4;
+        }
+        .directory-info-row {
+          display: grid;
+          grid-template-columns: 16px 1fr;
+          gap: 10px;
+          align-items: start;
+          color: var(--_colours---light);
+        }
+        .directory-info-row svg {
+          opacity: 0.55;
+          margin-top: 3px;
+          flex-shrink: 0;
+        }
+        .directory-info-link {
+          color: var(--_colours---light);
+          text-decoration: underline;
+          text-decoration-color: rgba(252,241,218,0.2);
+          text-underline-offset: 3px;
+          transition: text-decoration-color .2s;
+        }
+        .directory-info-link:hover { text-decoration-color: var(--_colours---light); }
         .directory-tags { display: flex; flex-wrap: wrap; gap: 6px; }
         .directory-tag {
           font-size: 12px;
@@ -345,8 +428,63 @@ export default function DirectoryClient({
           border-radius: 999px;
           opacity: 0.85;
         }
+        .directory-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          align-items: center;
+          margin-top: auto;
+        }
+        .directory-ig {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px; height: 40px;
+          border: 1px solid var(--_colours---light);
+          border-radius: 2px;
+          color: var(--_colours---light);
+          transition: background .2s;
+        }
+        .directory-ig:hover {
+          background: var(--_colours---light);
+          color: #0c1a12;
+        }
       `}</style>
     </>
+  );
+}
+
+function PinIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M20 10c0 7-8 12-8 12s-8-5-8-12a8 8 0 0 1 16 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.92z" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  );
+}
+
+function InstagramIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M16.98 0a6.9 6.9 0 0 1 5.08 1.98A6.94 6.94 0 0 1 24 7.02v9.96c0 2.08-.68 3.87-1.98 5.13A7.14 7.14 0 0 1 16.94 24H7.06a7.06 7.06 0 0 1-5.03-1.89A6.96 6.96 0 0 1 0 16.94V7.02C0 2.8 2.8 0 7.02 0h9.96zm.05 2.23H7.06c-1.45 0-2.7.43-3.53 1.25a4.82 4.82 0 0 0-1.3 3.54v9.92c0 1.5.43 2.7 1.3 3.58a5 5 0 0 0 3.53 1.25h9.88a5 5 0 0 0 3.53-1.25 4.73 4.73 0 0 0 1.4-3.54V7.02a5 5 0 0 0-1.3-3.49 4.82 4.82 0 0 0-3.54-1.3zM12 5.76c3.39 0 6.2 2.8 6.2 6.2a6.2 6.2 0 0 1-12.4 0 6.2 6.2 0 0 1 6.2-6.2zm0 2.22a3.99 3.99 0 0 0-3.97 3.97A3.99 3.99 0 0 0 12 15.92a3.99 3.99 0 0 0 3.97-3.97A3.99 3.99 0 0 0 12 7.98zm6.44-3.77a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8z" />
+    </svg>
   );
 }
 

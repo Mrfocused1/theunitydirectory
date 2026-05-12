@@ -188,8 +188,17 @@ function DetailsPanel({
           l.phone
             ? { label: "Phone", value: l.phone, href: `tel:${l.phone.replace(/\s+/g, "")}` }
             : null,
+          l.hours ? { label: "Hours", value: l.hours } : null,
           l.url
             ? { label: "Website", value: prettyUrl(l.url), href: l.url, external: true }
+            : null,
+          l.instagram
+            ? {
+                label: "Instagram",
+                value: `@${l.instagram}`,
+                href: `https://instagram.com/${l.instagram}`,
+                external: true,
+              }
             : null,
         ].filter(Boolean) as Row[]}
       />
@@ -212,6 +221,19 @@ function DetailsPanel({
             className="button outline w-inline-block"
           >
             <div>Visit website</div>
+          </a>
+        )}
+        {l.instagram && (
+          <a
+            href={`https://instagram.com/${l.instagram}`}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`${l.name} on Instagram`}
+            className="details-ig"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M16.98 0a6.9 6.9 0 0 1 5.08 1.98A6.94 6.94 0 0 1 24 7.02v9.96c0 2.08-.68 3.87-1.98 5.13A7.14 7.14 0 0 1 16.94 24H7.06a7.06 7.06 0 0 1-5.03-1.89A6.96 6.96 0 0 1 0 16.94V7.02C0 2.8 2.8 0 7.02 0h9.96zm.05 2.23H7.06c-1.45 0-2.7.43-3.53 1.25a4.82 4.82 0 0 0-1.3 3.54v9.92c0 1.5.43 2.7 1.3 3.58a5 5 0 0 0 3.53 1.25h9.88a5 5 0 0 0 3.53-1.25 4.73 4.73 0 0 0 1.4-3.54V7.02a5 5 0 0 0-1.3-3.49 4.82 4.82 0 0 0-3.54-1.3zM12 5.76c3.39 0 6.2 2.8 6.2 6.2a6.2 6.2 0 0 1-12.4 0 6.2 6.2 0 0 1 6.2-6.2zm0 2.22a3.99 3.99 0 0 0-3.97 3.97A3.99 3.99 0 0 0 12 15.92a3.99 3.99 0 0 0 3.97-3.97A3.99 3.99 0 0 0 12 7.98zm6.44-3.77a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8z" />
+            </svg>
           </a>
         )}
       </div>
@@ -332,5 +354,20 @@ const detailsCss = `
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 32px;
+    align-items: center;
+  }
+  .details-ig {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px; height: 44px;
+    border: 1px solid var(--_colours---light);
+    border-radius: 2px;
+    color: var(--_colours---light);
+    transition: all .2s;
+  }
+  .details-ig:hover {
+    background: var(--_colours---light);
+    color: #0c1a12;
   }
 `;
