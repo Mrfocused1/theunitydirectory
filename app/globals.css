@@ -160,6 +160,13 @@ html[data-theme="light"] .details-close:hover {
   border-color: #0c1a12;
 }
 
+/* Logo: invert white → near-black on cream */
+html[data-theme="light"] .tud-logo,
+html[data-theme="light"] .footer-image,
+html[data-theme="light"] .site-header-image {
+  filter: invert(1);
+}
+
 /* Directions popover */
 html[data-theme="light"] .tud-dir-menu {
   background: #fcf1da;
