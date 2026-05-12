@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import MapClient, { type MapSelection } from "@/components/MapClient";
+import DirectionsMenu from "@/components/DirectionsMenu";
 import {
   COUNTRIES,
   STADIUM,
@@ -202,14 +203,7 @@ function DetailsPanel({
       )}
 
       <div className="details-actions">
-        <a
-          href={gmapsHref(l.address)}
-          target="_blank"
-          rel="noreferrer"
-          className="button w-inline-block"
-        >
-          <div>Directions</div>
-        </a>
+        <DirectionsMenu lat={l.lat} lng={l.lng} />
         {l.url && (
           <a
             href={l.url}

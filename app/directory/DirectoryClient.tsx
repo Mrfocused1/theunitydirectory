@@ -10,6 +10,7 @@ import {
   type Listing,
   type LatLng,
 } from "@/lib/data";
+import DirectionsMenu from "@/components/DirectionsMenu";
 
 type ProximityMode = "stadium" | "me" | "off";
 type RadiusKm = 2 | 5 | 10 | "all";
@@ -222,14 +223,7 @@ export default function DirectoryClient({
                   ))}
                 </div>
                 <div className="balance">
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.address)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="button outline w-inline-block"
-                  >
-                    <div>Directions</div>
-                  </a>
+                  <DirectionsMenu lat={l.lat} lng={l.lng} variant="outline" />
                 </div>
               </div>
             </article>
