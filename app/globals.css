@@ -1,0 +1,23 @@
+@import url("/unitycup.css");
+
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #ffb81c;
+  color: #0f2116;
+}
+::-moz-selection {
+  background: #ffb81c;
+  color: #0f2116;
+}
+
+select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
