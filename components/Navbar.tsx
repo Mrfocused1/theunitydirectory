@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import ThemeToggle from "./ThemeToggle";
 
 const LINKS = [
   { href: "/directory", label: "Directory" },
@@ -54,6 +55,7 @@ export default function Navbar() {
             <Link href="/enquire" className="button outline w-inline-block tud-nav-cta">
               <div>Enquire</div>
             </Link>
+            <ThemeToggle compact />
             <a
               href="https://instagram.com/unitycupfootball"
               target="_blank"
@@ -98,6 +100,9 @@ export default function Navbar() {
           <Link href="/enquire" className="tud-mobile-link tud-mobile-link--cta">
             Enquire
           </Link>
+          <div style={{ padding: "18px 0", borderBottom: "1px solid rgba(252,241,218,0.12)" }}>
+            <ThemeToggle />
+          </div>
           <a
             href="https://instagram.com/unitycupfootball"
             target="_blank"

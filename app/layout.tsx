@@ -31,6 +31,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          // Set theme before paint to avoid a flash.
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('tud-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;}}catch(e){}`,
+          }}
+        />
+      </head>
       <body>
         <Navbar />
         {children}

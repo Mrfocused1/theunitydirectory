@@ -1,9 +1,22 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, CircleMarker, Marker, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { COUNTRIES, STADIUM, type Listing } from "@/lib/data";
+
+function useTheme() {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  useEffect(() => {
+    const root = document.documentElement;
+    const read = () => setTheme((root.dataset.theme as "dark" | "light") || "dark");
+    read();
+    const obs = new MutationObserver(read);
+    obs.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => obs.disconnect();
+  }, []);
+  return theme;
+}
 
 export type MapSelection =
   | { kind: "listing"; data: Listing }
@@ -60,17 +73,25 @@ export default function Map({
   focusStadium?: boolean;
   onSelect?: (sel: MapSelection) => void;
 }) {
+  const theme = useTheme();
+  const tileUrl =
+    theme === "light"
+      ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+      : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+  const mapBg = theme === "light" ? "#fcf1da" : "#0c1a12";
+
   return (
     <div style={{ height, width: "100%", borderRadius: 2, overflow: "hidden", position: "relative" }}>
       <MapContainer
         center={[STADIUM.lat, STADIUM.lng]}
         zoom={13}
-        style={{ height: "100%", width: "100%", background: "#0c1a12" }}
+        style={{ height: "100%", width: "100%", background: mapBg }}
         scrollWheelZoom={false}
       >
         <TileLayer
+          key={theme}
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          url={tileUrl}
         />
         <FitBounds points={listings.map((l) => ({ lat: l.lat, lng: l.lng }))} focusStadium={focusStadium} />
 
