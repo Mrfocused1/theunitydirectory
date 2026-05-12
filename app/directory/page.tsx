@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import DirectoryClient from "./DirectoryClient";
 import { LISTINGS, ALL_AREAS, COUNTRIES } from "@/lib/data";
 
@@ -18,7 +19,9 @@ export default function DirectoryPage() {
 
       <section className="section _0-top">
         <div className="container">
-          <DirectoryClient listings={LISTINGS} areas={ALL_AREAS} countries={COUNTRIES} />
+          <Suspense fallback={null}>
+            <DirectoryClient listings={LISTINGS} areas={ALL_AREAS} countries={COUNTRIES} />
+          </Suspense>
         </div>
       </section>
     </>
